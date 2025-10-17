@@ -8,7 +8,7 @@ import { OperationsComponent } from './features/operations/operations.component'
 export const routes: Routes = [
     
         
-            { path: '', redirectTo: 'home', pathMatch: 'full' },
+            { path: '', redirectTo: 'patients', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'patients', component: PatientsComponent },
             { path: 'materials', component: MaterialsComponent },
