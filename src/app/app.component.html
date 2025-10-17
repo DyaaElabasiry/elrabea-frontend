@@ -1,0 +1,31 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/home">El Rabea Clinic</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/patients" routerLinkActive="active">Patients</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/materials" routerLinkActive="active">Materials</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/sessions" routerLinkActive="active">Sessions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/operations" routerLinkActive="active">Operations</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container-fluid">
+  <router-outlet></router-outlet>
+</main>
