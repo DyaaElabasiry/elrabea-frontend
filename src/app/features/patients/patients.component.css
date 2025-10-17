@@ -1,3 +1,15 @@
 .patient-search-input-group {
   max-width: 400px;
 }
+
+.page-size-select {
+  width: auto;
+}
+
+.pagination .page-link {
+  cursor: pointer;
+}
+
+.pagination .page-item.disabled .page-link {
+  cursor: not-allowed;
+}

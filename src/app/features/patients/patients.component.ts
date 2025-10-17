@@ -20,10 +20,21 @@ export class PatientsComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
 
+  // Expose Math for template
+  Math = Math;
+
   // State signals
   patients = signal<Patient[]>([]);
   isEditing = signal(false);
   submitted = signal(false);
+  
+  // Pagination signals
+  currentPage = signal(1);
+  pageSize = signal(10);
+  totalCount = signal(0);
+  totalPages = signal(0);
+  hasPreviousPage = signal(false);
+  hasNextPage = signal(false);
 
   patientForm = this.fb.group({
     id: [null as number | null],
@@ -38,8 +49,16 @@ export class PatientsComponent {
   }
 
   loadPatients() {
-    this.patientService.getPatients().pipe(
-      tap(data => this.patients.set(data))
+    this.patientService.getPatients(this.currentPage(), this.pageSize()).pipe(
+      tap(data => {
+        this.patients.set(data.items);
+        this.currentPage.set(data.pageNumber);
+        this.pageSize.set(data.pageSize);
+        this.totalCount.set(data.totalCount);
+        this.totalPages.set(data.totalPages);
+        this.hasPreviousPage.set(data.hasPreviousPage);
+        this.hasNextPage.set(data.hasNextPage);
+      })
     ).subscribe();
   }
 
@@ -96,19 +115,58 @@ export class PatientsComponent {
         next: (data) => {
           // If a patient is found, set it as a single-item array, otherwise empty array
           this.patients.set(data ? [data] : []);
+          // Reset pagination when searching
+          this.totalCount.set(data ? 1 : 0);
+          this.totalPages.set(1);
+          this.currentPage.set(1);
+          this.hasPreviousPage.set(false);
+          this.hasNextPage.set(false);
         },
         error: (error) => {
           console.error('Search error:', error);
           this.patients.set([]);
+          this.totalCount.set(0);
         }
       });
     } else {
+      this.currentPage.set(1); // Reset to first page
       this.loadPatients(); // Load all patients if filter is cleared
     }
   }
 
   viewOperations(patientId: number, patientName: string) {
     this.router.navigate(['/operations', patientId,  patientName ]);
+  }
+
+  // Pagination methods
+  goToFirstPage() {
+    this.currentPage.set(1);
+    this.loadPatients();
+  }
+
+  goToPreviousPage() {
+    if (this.hasPreviousPage()) {
+      this.currentPage.update(page => page - 1);
+      this.loadPatients();
+    }
+  }
+
+  goToNextPage() {
+    if (this.hasNextPage()) {
+      this.currentPage.update(page => page + 1);
+      this.loadPatients();
+    }
+  }
+
+  goToLastPage() {
+    this.currentPage.set(this.totalPages());
+    this.loadPatients();
+  }
+
+  onPageSizeChange(newPageSize: number) {
+    this.pageSize.set(newPageSize);
+    this.currentPage.set(1); // Reset to first page when changing page size
+    this.loadPatients();
   }
 
 }

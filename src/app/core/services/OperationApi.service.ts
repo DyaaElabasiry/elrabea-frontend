@@ -9,7 +9,7 @@ import { Operation } from '../../shared/Models/operation.model';
 })
 export class OperationApiService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://elrabea.runasp.net/api/operations';
+  private apiUrl = 'https://elrabea.runasp.net/api/operations';
 
   getOperations(): Observable<Operation[]> {
     return this.http.get<Operation[]>(this.apiUrl).pipe(

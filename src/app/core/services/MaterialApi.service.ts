@@ -9,7 +9,7 @@ import { Material } from '../../shared/Models/material.model';
 })
 export class MaterialApiService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://elrabea.runasp.net/api/materials'; // Using a relative URL
+  private apiUrl = 'https://elrabea.runasp.net/api/materials'; // Using a relative URL
 
   getMaterialsByDateRange(startDate: string, endDate: string): Observable<Material[]> {
     const params = new HttpParams()

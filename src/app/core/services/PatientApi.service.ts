@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Patient } from '../../shared/Models/patient.model';
+import { Patient, PaginatedResponse } from '../../shared/Models/patient.model';
 
 
 // --- API SERVICE ---
@@ -12,11 +12,24 @@ import { Patient } from '../../shared/Models/patient.model';
 export class PatientApiService {
   private http = inject(HttpClient);
   // IMPORTANT: Replace with your actual API endpoint
-  private apiUrl = 'http://elrabea.runasp.net/api/patients'; // Updated to your backend URL
+  private apiUrl = 'https://elrabea.runasp.net/api/patients'; // Updated to your backend URL
 
-  getPatients(): Observable<Patient[]> {
+  getPatients(pageNumber: number = 1, pageSize: number = 10): Observable<PaginatedResponse<Patient>> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
     
-    return this.http.get<Patient[]>(this.apiUrl).pipe(catchError(this.handleError<Patient[]>('getPatients', [])));
+    return this.http.get<PaginatedResponse<Patient>>(this.apiUrl, { params }).pipe(
+      catchError(this.handleError<PaginatedResponse<Patient>>('getPatients', {
+        items: [],
+        pageNumber: 1,
+        pageSize: 10,
+        totalCount: 0,
+        totalPages: 0,
+        hasPreviousPage: false,
+        hasNextPage: false
+      }))
+    );
   }
 
   getPatient(id: number): Observable<Patient | undefined> {

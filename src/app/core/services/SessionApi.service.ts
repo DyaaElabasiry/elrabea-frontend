@@ -7,7 +7,7 @@ import { Session } from '../../shared/Models/session.model';
   providedIn: 'root'
 })
 export class SessionApiService {
-  private apiUrl = 'http://elrabea.runasp.net/api/sessions';
+  private apiUrl = 'https://elrabea.runasp.net/api/sessions';
 
   constructor(private http: HttpClient) {}
 
