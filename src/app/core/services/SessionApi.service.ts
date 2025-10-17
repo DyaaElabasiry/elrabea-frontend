@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Session } from '../../shared/Models/session.model';
 
 @Injectable({
@@ -13,7 +14,9 @@ export class SessionApiService {
 
   // Get all sessions
   getSessions(): Observable<Session[]> {
-    return this.http.get<Session[]>(this.apiUrl);
+    return this.http.get<Session[]>(this.apiUrl).pipe(
+      map(sessions => sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()))
+    );
   }
 
   // Get session by id
@@ -23,7 +26,9 @@ export class SessionApiService {
 
   // Get sessions by operation id
   getSessionsByOperationId(operationId: number): Observable<Session[]> {
-    return this.http.get<Session[]>(`${this.apiUrl}/by-operation/${operationId}`);
+    return this.http.get<Session[]>(`${this.apiUrl}/by-operation/${operationId}`).pipe(
+      map(sessions => sessions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()))
+    );
   }
 
   // Create a new session

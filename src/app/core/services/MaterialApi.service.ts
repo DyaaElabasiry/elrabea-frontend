@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Material } from '../../shared/Models/material.model';
 
 @Injectable({
@@ -17,6 +17,7 @@ export class MaterialApiService {
       .set('endDate', endDate);
 
     return this.http.get<Material[]>(`${this.apiUrl}/by-date-range`, { params }).pipe(
+      map(materials => materials.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
       catchError(this.handleError<Material[]>('getMaterialsByDateRange', []))
     );
   }

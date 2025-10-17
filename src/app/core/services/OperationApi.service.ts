@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Operation } from '../../shared/Models/operation.model';
 
 @Injectable({
@@ -13,6 +13,7 @@ export class OperationApiService {
 
   getOperations(): Observable<Operation[]> {
     return this.http.get<Operation[]>(this.apiUrl).pipe(
+      map(operations => operations.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
       catchError(this.handleError<Operation[]>('getOperations', []))
     );
   }
@@ -27,6 +28,7 @@ export class OperationApiService {
   getOperationsByPatientId(patientId: number): Observable<Operation[]> {
     const url = `${this.apiUrl}/by-patient/${patientId}`;
     return this.http.get<Operation[]>(url).pipe(
+      map(operations => operations.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())),
       catchError(this.handleError<Operation[]>('getOperationsByPatientId', []))
     );
   }
